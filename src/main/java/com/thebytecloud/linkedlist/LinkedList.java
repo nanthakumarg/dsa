@@ -97,4 +97,26 @@ public class LinkedList<E extends Comparable<E>> implements Cloneable {
 
     }
 
+    public void insertSorted(E data) {
+
+        Node<E> newNode = new Node<E>(data);
+
+        if(countNodes() ==0 && head.getData().compareTo(data) > 0){
+            newNode.setNext(head);
+            head = newNode;
+            return;
+        }
+
+        Node<E> currentNode = head;
+
+        while(currentNode.getNext() != null && currentNode.getData().compareTo(data) < 0) {
+            currentNode = currentNode.getNext();
+        }
+
+        newNode.setNext(currentNode.getNext());
+        currentNode.setNext(newNode);
+
+
+    }
+
 }
