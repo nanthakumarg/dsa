@@ -1,5 +1,7 @@
 package com.thebytecloud.linkedlist;
 
+import java.util.List;
+
 public class LinkedList<E extends Comparable<E>> implements Cloneable {
 
     private Node<E> head = null;
@@ -50,7 +52,7 @@ public class LinkedList<E extends Comparable<E>> implements Cloneable {
         }
 
         Node currentNode = head;
-        int count = 1;
+        int count = 0;
         while(currentNode != null) {
             currentNode = currentNode.getNext();
             count++;
@@ -109,7 +111,7 @@ public class LinkedList<E extends Comparable<E>> implements Cloneable {
 
         Node<E> currentNode = head;
 
-        while(currentNode.getNext() != null && currentNode.getData().compareTo(data) < 0) {
+        while(currentNode.getNext() != null && currentNode.getNext().getData().compareTo(data) < 0) {
             currentNode = currentNode.getNext();
         }
 
@@ -118,5 +120,106 @@ public class LinkedList<E extends Comparable<E>> implements Cloneable {
 
 
     }
+
+    public void appendList(LinkedList<E> ll){
+
+        if(ll.head == null)
+            return;
+
+        Node<E> currentNode = ll.head;
+        while(currentNode != null) {
+            addNode( (E) currentNode.getData());
+            currentNode = currentNode.getNext();
+        }
+
+    }
+
+
+    /*
+    Brute Force Solution
+
+    public List<LinkedList<E>> frontBackSplit() {
+        int count = countNodes();
+        int mid = count / 2 + count % 2;
+
+        LinkedList<E> front = new LinkedList<E>();
+        LinkedList<E> back = new LinkedList<E>();
+
+        Node<E> currentNode = head;
+        int i = 0;
+        while(currentNode != null && i < mid) {
+            front.addNode((E) currentNode.getData());
+            currentNode = currentNode.getNext();
+            i++;
+        }
+
+        while(currentNode != null && i < count ) {
+            back.addNode((E)currentNode.getData());
+            currentNode = currentNode.getNext();
+            i++;
+        }
+
+        return List.of(front, back);
+
+    }*/
+
+    public List<Node<E>> frontBackSplit() {
+
+        Node<E> front = null;
+        Node<E> back = null;
+
+        if(head == null) {
+            front = null;
+            back = null;
+        } else if(head.getNext() == null) {
+            front = head;
+            back = null;
+        } else {
+
+            Node<E> fast = head;
+            Node<E> slow = head;
+            while(fast != null) {
+                fast = fast.getNext();
+
+                if(fast == null)
+                    break;
+
+                fast = fast.getNext();
+                if(fast != null) {
+                    slow = slow.getNext();
+                }
+            }
+
+            front = head;
+            back = slow.getNext();
+            slow.setNext(null);
+        }
+
+        return List.of(front, back);
+    }
+
+    //Remove duplicate in the sorted List
+    public void removeDuplicates() {
+
+        int count = countNodes();
+
+        if(count == 0 || count == 1) {
+            return;
+        }
+
+        Node<E> currentNode = head;
+
+        do {
+
+            if(currentNode.getData().compareTo(currentNode.getNext().getData()) == 0 ) {
+
+                currentNode.setNext(currentNode.getNext().getNext());
+            } else {
+                currentNode = currentNode.getNext();
+            }
+
+        }while ( currentNode != null );
+    }
+
 
 }
